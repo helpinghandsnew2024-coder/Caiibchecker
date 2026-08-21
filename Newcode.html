@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>New Helping Hands | Banking Examination Portal</title>
+  <style>
+    :root {
+      --primary: #1e40af;
+      --primary-dark: #1e3a8a;
+      --primary-light: #eff6ff;
+      --accent: #2563eb;
+      --bg: #f1f5f9;
+      --card: #ffffff;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --success: #16a34a;
+      --danger: #dc2626;
+      --warning: #d97706;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Top Navbar */
+    .navbar {
+      background: #0f172a;
+      color: #ffffff;
+      padding: 14px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .navbar .brand {
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .navbar .user-info {
+      font-size: 14px;
+      color: #94a3b8;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .logout-link {
+      color: #f87171;
+      cursor: pointer;
+      text-decoration: underline;
+      font-size: 13px;
+    }
+
+    .container {
+      max-width: 1000px;
+      width: 100%;
+      margin: 30px auto;
+      padding: 0 16px;
+      flex: 1;
+    }
+
+    /* Card Box */
+    .card {
+      background: var(--card);
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+      padding: 30px;
+    }
+
+    /* Section 1: Login Screen */
+    .login-wrapper {
+      max-width: 420px;
+      margin: 50px auto;
+      text-align: center;
+    }
+    .login-wrapper h2 {
+      font-size: 24px;
+      margin-bottom: 8px;
+      color: var(--primary-dark);
+    }
+    .login-wrapper p {
+      color: var(--text-muted);
+      font-size: 14px;
+      margin-bottom: 24px;
+    }
+    .form-group {
+      margin-bottom: 16px;
+      text-align: left;
+    }
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+    .form-group input {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 15px;
+      outline: none;
+    }
+    .form-group input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(37,99,235,0.15);
+    }
+    .btn-primary {
+      width: 100%;
+      padding: 12px;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .btn-primary:hover {
+      background: var(--primary-dark);
+    }
+    .error-msg {
+      color: var(--danger);
+      font-size: 13px;
+      margin-top: 10px;
+      display: none;
+    }
+
+    /* Section 2: Test Selector */
+    .dashboard-title {
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+    .dashboard-subtitle {
+      color: var(--text-muted);
+      font-size: 14px;
+      margin-bottom: 24px;
+    }
+    .test-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+    }
+    .test-card {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .test-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px -2px rgba(0,0,0,0.08);
+    }
+    .test-badge {
+      display: inline-block;
+      padding: 4px 10px;
+      background: var(--primary-light);
+      color: var(--accent);
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      margin-bottom: 12px;
+      align-self: flex-start;
+    }
+    .test-card h3 {
+      font-size: 17px;
+      margin-bottom: 8px;
+    }
+    .test-meta {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+    }
+
+    /* Section 3: Exam Interface */
+    .exam-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 20px;
+    }
+    .timer-box {
+      background: #fef3c7;
+      color: var(--warning);
+      padding: 6px 14px;
+      border-radius: 6px;
+      font-weight: 700;
+      font-size: 15px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .exam-layout {
+      display: grid;
+      grid-template-columns: 1fr 240px;
+      gap: 24px;
+    }
+    @media (max-width: 768px) {
+      .exam-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+    .question-panel {
+      min-height: 350px;
+      display: flex;
+      flex-direction: column;
+    }
+    .q-number {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--accent);
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .q-text {
+      font-size: 17px;
+      font-weight: 600;
+      line-height: 1.5;
+      margin-bottom: 20px;
+    }
+    .option-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+    .option-item {
+      padding: 12px 16px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: all 0.15s;
+    }
+    .option-item:hover {
+      background: #f8fafc;
+      border-color: #cbd5e1;
+    }
+    .option-item.active {
+      border-color: var(--accent);
+      background: #eff6ff;
+      font-weight: 600;
+    }
+    .nav-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: auto;
+    }
+    .btn-secondary {
+      padding: 10px 18px;
+      background: #f1f5f9;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      color: var(--text-main);
+    }
+    .btn-secondary:hover {
+      background: #e2e8f0;
+    }
+    .btn-submit {
+      margin-left: auto;
+      background: var(--success);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    /* Palette */
+    .palette-box {
+      border-left: 1px solid var(--border);
+      padding-left: 20px;
+    }
+    @media (max-width: 768px) {
+      .palette-box {
+        border-left: none;
+        border-top: 1px solid var(--border);
+        padding-left: 0;
+        padding-top: 20px;
+      }
+    }
+    .palette-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+    }
+    .palette-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+    }
+    .palette-btn {
+      height: 38px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: #f8fafc;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 13px;
+    }
+    .palette-btn.attempted {
+      background: var(--accent);
+      color: white;
+      border-color: var(--accent);
+    }
+    .palette-btn.current {
+      border: 2px solid #0f172a;
+    }
+
+    /* Results */
+    .score-summary {
+      text-align: center;
+      padding: 20px 0;
+    }
+    .score-big {
+      font-size: 48px;
+      font-weight: 800;
+      color: var(--primary);
+      margin: 12px 0;
+    }
+    .review-item {
+      text-align: left;
+      padding: 16px;
+      border-bottom: 1px solid var(--border);
+    }
+    .badge {
+      display: inline-block;
+      padding: 2px 8px;
+      font-size: 11px;
+      border-radius: 4px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+    .badge-pass { background: #dcfce7; color: #166534; }
+    .badge-fail { background: #fee2e2; color: #991b1b; }
+    .explanation-text {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-top: 6px;
+      background: #f8fafc;
+      padding: 8px 12px;
+      border-radius: 6px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <nav class="navbar">
+    <div class="brand">
+      <span>🏦</span> New Helping Hands
+    </div>
+    <div class="user-info" id="user-display" style="display: none;">
+      <span id="display-phone"></span>
+      <span class="logout-link" onclick="logout()">Logout</span>
+    </div>
+  </nav>
+
+  <div class="container">
+    
+    <!-- VIEW 1: AUTHENTICATION -->
+    <div id="view-login" class="card login-wrapper">
+      <h2>Portal Login</h2>
+      <p>Enter your registered mobile number to access mock tests</p>
+      
+      <div class="form-group">
+        <label for="phone-input">10-Digit Mobile Number</label>
+        <input type="tel" id="phone-input" placeholder="e.g. 9876543210" maxlength="10" />
+      </div>
+      <button class="btn-primary" onclick="handleLogin()">Access Tests</button>
+      <div class="error-msg" id="login-error">Mobile number not found in authorized list.</div>
+    </div>
+
+    <!-- VIEW 2: TEST SELECTION DASHBOARD -->
+    <div id="view-dashboard" class="card" style="display: none;">
+      <h2 class="dashboard-title">Banking Test Series</h2>
+      <p class="dashboard-subtitle">Select an examination mock set below to start your timed test</p>
+      
+      <div class="test-grid" id="test-list-container"></div>
+    </div>
+
+    <!-- VIEW 3: ACTIVE TEST INTERFACE -->
+    <div id="view-exam" class="card" style="display: none;">
+      <div class="exam-header">
+        <div>
+          <h3 id="active-test-title" style="font-size: 18px;">Test Title</h3>
+          <span style="font-size: 13px; color: var(--text-muted);" id="active-test-cat">General</span>
+        </div>
+        <div class="timer-box">
+          <span>⏱ Time Left:</span>
+          <span id="timer-display">00:00</span>
+        </div>
+      </div>
+
+      <div class="exam-layout">
+        <!-- Question Column -->
+        <div class="question-panel">
+          <div class="q-number" id="q-number-label">Question 1</div>
+          <div class="q-text" id="q-text">Loading question...</div>
+          <div class="option-list" id="options-box"></div>
+
+          <div class="nav-actions">
+            <button class="btn-secondary" onclick="changeQuestion(-1)" id="btn-prev">Previous</button>
+            <button class="btn-secondary" onclick="changeQuestion(1)" id="btn-next">Next</button>
+            <button class="btn-submit" onclick="submitExam()">Submit Test</button>
+          </div>
+        </div>
+
+        <!-- Question Palette -->
+        <div class="palette-box">
+          <div class="palette-title">QUESTION PALETTE</div>
+          <div class="palette-grid" id="palette-grid"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- VIEW 4: RESULTS & REVIEW -->
+    <div id="view-result" class="card" style="display: none;">
+      <div class="score-summary">
+        <h2>Test Summary</h2>
+        <div class="score-big" id="final-score">0 / 0</div>
+        <p id="accuracy-text" style="color: var(--text-muted); font-weight: 600;"></p>
+        <button class="btn-secondary" style="margin-top: 18px;" onclick="returnToDashboard()">Back to Tests</button>
+      </div>
+
+      <h3 style="margin: 30px 0 12px; font-size: 16px;">Detailed Solution & Explanations</h3>
+      <div id="solutions-container"></div>
+    </div>
+
+  </div>
+
+  <script>
+    // ==========================================
+    // 1. ADMIN CONFIGURATION
+    // Add allowed student mobile numbers here:
+    // ==========================================
+    const AUTHORIZED_NUMBERS = [
+      "9876543210",
+      "9123456780",
+      "9999999999",
+      "8888888888"
+    ];
+
+    // ==========================================
+    // 2. TEST REPOSITORY (ADD MULTIPLE TESTS HERE)
+    // ==========================================
+    const TESTS = [
+      {
+        id: "test-1",
+        title: "RBI & Monetary Policy Mock 01",
+        category: "Banking Awareness",
+        durationMinutes: 5,
+        questions: [
+          {
+            q: "What is the primary objective of the Reserve Bank of India's Monetary Policy Committee (MPC)?",
+            options: [
+              "Regulating stock exchange listings",
+              "Maintaining price stability while keeping in mind growth",
+              "Fixing personal income tax brackets",
+              "Managing foreign exchange loans for private corporates"
+            ],
+            correct: 1,
+            exp: "Under Section 45ZB of the amended RBI Act 1934, the primary objective of the MPC is price stability while supporting growth."
+          },
+          {
+            q: "Which facility allows scheduled commercial banks to borrow overnight funds from RBI against eligible securities during acute cash shortages?",
+            options: [
+              "Marginal Standing Facility (MSF)",
+              "Cash Reserve Ratio (CRR)",
+              "Statutory Liquidity Ratio (SLR)",
+              "Sovereign Gold Bond Scheme"
+            ],
+            correct: 0,
+            exp: "Marginal Standing Facility (MSF) is an overnight liquidity window provided by RBI for scheduled banks."
+          },
+          {
+            q: "Under Basel III norms, what is the minimum Common Equity Tier 1 (CET1) ratio required for Indian banks?",
+            options: ["4.5%", "5.5%", "7.0%", "9.0%"],
+            correct: 1,
+            exp: "RBI prescribes a minimum CET1 ratio of 5.5% of risk-weighted assets for Indian commercial banks."
+          }
+        ]
+      },
+      {
+        id: "test-2",
+        title: "Quantitative Aptitude: Banking Speed Test",
+        category: "Quant Section",
+        durationMinutes: 5,
+        questions: [
+          {
+            q: "A sum of ₹15,000 yields ₹3,600 as simple interest in 3 years. What is the annual interest rate?",
+            options: ["6%", "8%", "10%", "12%"],
+            correct: 1,
+            exp: "R = (SI × 100) / (P × T) = (3600 × 100) / (15000 × 3) = 360000 / 45000 = 8%."
+          },
+          {
+            q: "A train running at 72 km/h crosses a 200-meter platform in 22 seconds. What is the length of the train?",
+            options: ["200 m", "240 m", "250 m", "300 m"],
+            correct: 1,
+            exp: "Speed = 72 × (5/18) = 20 m/s. Total Distance = 20 × 22 = 440 m. Train Length = 440 - 200 = 240 meters."
+          }
+        ]
+      }
+    ];
+
+    // State Variables
+    let currentUser = null;
+    let activeTest = null;
+    let currentQIdx = 0;
+    let userAnswers = {};
+    let timerInterval = null;
+    let timeRemaining = 0;
+
+    // View Switcher Utility
+    function switchView(viewId) {
+      ["view-login", "view-dashboard", "view-exam", "view-result"].forEach(id => {
+        document.getElementById(id).style.display = (id === viewId) ? "block" : "none";
+      });
+    }
+
+    // Auth Handling
+    function handleLogin() {
+      const phoneInput = document.getElementById("phone-input").value.trim();
+      const errorMsg = document.getElementById("login-error");
+
+      if (AUTHORIZED_NUMBERS.includes(phoneInput)) {
+        currentUser = phoneInput;
+        errorMsg.style.display = "none";
+        document.getElementById("user-display").style.display = "flex";
+        document.getElementById("display-phone").innerText = "👤 " + currentUser;
+        renderDashboard();
+        switchView("view-dashboard");
+      } else {
+        errorMsg.style.display = "block";
+      }
+    }
+
+    function logout() {
+      currentUser = null;
+      clearInterval(timerInterval);
+      document.getElementById("user-display").style.display = "none";
+      document.getElementById("phone-input").value = "";
+      switchView("view-login");
+    }
+
+    // Dashboard Rendering
+    function renderDashboard() {
+      const container = document.getElementById("test-list-container");
+      container.innerHTML = "";
+
+      TESTS.forEach(t => {
+        const div = document.createElement("div");
+        div.className = "test-card";
+        div.innerHTML = `
+          <div>
+            <span class="test-badge">${t.category}</span>
+            <h3>${t.title}</h3>
+            <div class="test-meta">
+              <span>⏱ ${t.durationMinutes} Mins</span> &bull; 
+              <span>📝 ${t.questions.length} Questions</span>
+            </div>
+          </div>
+          <button class="btn-primary" style="padding: 8px 14px; font-size: 14px;" onclick="startExam('${t.id}')">Start Test</button>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    // Start Exam Session
+    function startExam(testId) {
+      activeTest = TESTS.find(t => t.id === testId);
+      currentQIdx = 0;
+      userAnswers = {};
+      timeRemaining = activeTest.durationMinutes * 60;
+
+      document.getElementById("active-test-title").innerText = activeTest.title;
+      document.getElementById("active-test-cat").innerText = activeTest.category;
+
+      renderPalette();
+      loadQuestion();
+      startTimer();
+      switchView("view-exam");
+    }
+
+    // Timer Logic
+    function startTimer() {
+      clearInterval(timerInterval);
+      updateTimerDisplay();
+
+      timerInterval = setInterval(() => {
+        timeRemaining--;
+        updateTimerDisplay();
+
+        if (timeRemaining <= 0) {
+          clearInterval(timerInterval);
+          alert("Time is up! Submitting your test automatically.");
+          submitExam();
+        }
+      }, 1000);
+    }
+
+    function updateTimerDisplay() {
+      const mins = Math.floor(timeRemaining / 60);
+      const secs = timeRemaining % 60;
+      document.getElementById("timer-display").innerText = 
+        `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+    }
+
+    // Exam Questions & Palette
+    function loadQuestion() {
+      const qData = activeTest.questions[currentQIdx];
+      document.getElementById("q-number-label").innerText = `Question ${currentQIdx + 1} of ${activeTest.questions.length}`;
+      document.getElementById("q-text").innerText = qData.q;
+
+      const optsBox = document.getElementById("options-box");
+      optsBox.innerHTML = "";
+
+      qData.options.forEach((opt, idx) => {
+        const item = document.createElement("div");
+        item.className = "option-item" + (userAnswers[currentQIdx] === idx ? " active" : "");
+        item.innerHTML = `<strong>${String.fromCharCode(65 + idx)}.</strong> ${opt}`;
+        item.onclick = () => selectOption(idx);
+        optsBox.appendChild(item);
+      });
+
+      document.getElementById("btn-prev").disabled = currentQIdx === 0;
+      document.getElementById("btn-next").disabled = currentQIdx === activeTest.questions.length - 1;
+      updatePaletteUI();
+    }
+
+    function selectOption(idx) {
+      userAnswers[currentQIdx] = idx;
+      loadQuestion();
+    }
+
+    function changeQuestion(step) {
+      currentQIdx += step;
+      loadQuestion();
+    }
+
+    function renderPalette() {
+      const palette = document.getElementById("palette-grid");
+      palette.innerHTML = "";
+
+      activeTest.questions.forEach((_, idx) => {
+        const btn = document.createElement("button");
+        btn.className = "palette-btn";
+        btn.id = `palette-btn-${idx}`;
+        btn.innerText = idx + 1;
+        btn.onclick = () => {
+          currentQIdx = idx;
+          loadQuestion();
+        };
+        palette.appendChild(btn);
+      });
+    }
+
+    function updatePaletteUI() {
+      activeTest.questions.forEach((_, idx) => {
+        const btn = document.getElementById(`palette-btn-${idx}`);
+        if (!btn) return;
+        btn.className = "palette-btn";
+        if (userAnswers[idx] !== undefined) btn.classList.add("attempted");
+        if (idx === currentQIdx) btn.classList.add("current");
+      });
+    }
+
+    // Submit Exam & Summary
+    function submitExam() {
+      if (!confirm("Are you sure you want to finish and submit the test?")) return;
+      clearInterval(timerInterval);
+
+      let score = 0;
+      const total = activeTest.questions.length;
+      const solContainer = document.getElementById("solutions-container");
+      solContainer.innerHTML = "";
+
+      activeTest.questions.forEach((q, idx) => {
+        const userChoice = userAnswers[idx];
+        const isCorrect = userChoice === q.correct;
+        if (isCorrect) score++;
+
+        const row = document.createElement("div");
+        row.className = "review-item";
+        row.innerHTML = `
+          <span class="badge ${isCorrect ? 'badge-pass' : 'badge-fail'}">
+            ${userChoice === undefined ? 'UNATTEMPTED' : (isCorrect ? 'CORRECT' : 'INCORRECT')}
+          </span>
+          <div style="font-weight: 600; font-size: 15px; margin-bottom: 6px;">Q${idx + 1}. ${q.q}</div>
+          <div style="font-size: 14px; margin-bottom: 4px;">
+            <strong>Your Answer:</strong> ${userChoice !== undefined ? q.options[userChoice] : 'None'}
+          </div>
+          <div style="font-size: 14px; color: var(--success);">
+            <strong>Correct Answer:</strong> ${q.options[q.correct]}
+          </div>
+          <div class="explanation-text">
+            <strong>Solution Note:</strong> ${q.exp}
+          </div>
+        `;
+        solContainer.appendChild(row);
+      });
+
+      document.getElementById("final-score").innerText = `${score} / ${total}`;
+      const accuracy = total > 0 ? Math.round((score / total) * 100) : 0;
+      document.getElementById("accuracy-text").innerText = `Accuracy Score: ${accuracy}%`;
+
+      switchView("view-result");
+    }
+
+    function returnToDashboard() {
+      switchView("view-dashboard");
+    }
+  </script>
+</body>
+</html>
